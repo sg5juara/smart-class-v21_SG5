@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Class Pro V1.5 - SDN Situgede 5</title>
+    <title>Smart Class Pro V1.6 - SDN Situgede 5</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e3a8a">
     
@@ -32,7 +32,7 @@
                     <img src="https://i.postimg.cc/wTJ7qP8W/Chat-GPT-Image-26-Apr-2026-23-02-01.png" alt="Operator Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black tracking-tighter text-blue-900 uppercase italic">Smart Class <span class="text-blue-500">Pro V1.5</span></h1>
+                    <h1 class="text-2xl font-black tracking-tighter text-blue-900 uppercase italic">Smart Class <span class="text-blue-500">Pro V1.6</span></h1>
                     <p class="text-[10px] font-extrabold text-blue-400 uppercase tracking-widest">Digital Hub SDN Situgede 5</p>
                 </div>
             </div>
@@ -75,16 +75,23 @@
 
             <div class="blue-gradient rounded-[2.5rem] p-10 text-white card-shadow relative overflow-hidden">
                 <div class="relative z-10">
-                    <p class="text-xs font-black uppercase text-blue-100 mb-2 italic">Update: 26 April 2026</p>
-                    <h2 id="currentDate" class="text-3xl font-black mb-6 tracking-tighter">Memuat...</h2>
+                    <p class="text-xs font-black uppercase text-blue-100 mb-2 italic">Dashboard Rombel</p>
+                    <h2 id="currentDate" class="text-2xl font-black mb-6 tracking-tighter">Memuat...</h2>
                     <div class="flex gap-4">
                         <div class="bg-white/10 rounded-2xl p-4 flex-1 text-center">
                             <p class="text-[9px] font-black uppercase text-blue-200">Siswa Terbaca</p>
-                            <p id="statSiswa" class="text-2xl font-black tabular-nums">0</p>
+                            <p id="statSiswa" class="text-2xl font-black tabular-nums mt-1">0</p>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl p-4 flex-1 text-center">
+                            <p class="text-[9px] font-black uppercase text-blue-200">Total L/P</p>
+                            <p class="text-xl font-black tabular-nums mt-1">
+                                <span id="statL" class="text-blue-300">0</span> <span class="text-[10px]">L</span> / 
+                                <span id="statP" class="text-pink-300">0</span> <span class="text-[10px]">P</span>
+                            </p>
                         </div>
                         <div class="bg-white/10 rounded-2xl p-4 flex-1 text-center">
                             <p class="text-[9px] font-black uppercase text-blue-200">Total Rombel</p>
-                            <p id="statRombel" class="text-2xl font-black tabular-nums">0</p>
+                            <p id="statRombel" class="text-2xl font-black tabular-nums mt-1">0</p>
                         </div>
                     </div>
                 </div>
@@ -127,7 +134,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
                             <label class="text-[10px] font-black text-blue-600 uppercase mb-1 block">Kepala Sekolah</label>
-                            <input type="text" id="kepsek" value="Neng Nia Juwita Septiani" class="w-full bg-transparent border-b-2 border-slate-200 font-black text-sm outline-none py-1 focus:border-blue-600">
+                            <input type="text" id="kepsek" value="Neng Nia Juwita Septiani, S.Pd." class="w-full bg-transparent border-b-2 border-slate-200 font-black text-sm outline-none py-1 focus:border-blue-600">
                             <label class="text-[8px] font-black text-slate-400 uppercase mt-3 block italic">NIP Kepala Sekolah</label>
                             <input type="text" id="nip" value="198509062011012003" class="w-full bg-transparent text-[10px] font-bold text-blue-400 outline-none border-b border-dashed border-blue-100">
                         </div>
@@ -137,11 +144,22 @@
 
                 <div class="flex flex-wrap gap-4">
                     <button onclick="process()" class="flex-1 py-6 blue-gradient text-white rounded-[2rem] font-black text-xs tracking-[0.3em] shadow-2xl hover:scale-[1.02] transition-all uppercase">
-                        🚀 Proses Romble Pa Cep
+                        🚀 Proses Rombel
                     </button>
                     <button id="btnPDF" onclick="printPDF()" class="hidden flex-1 py-6 bg-slate-900 text-white rounded-[2rem] font-black text-xs tracking-[0.3em] shadow-xl hover:bg-blue-800 transition-all uppercase">
                         🖨️ Cetak File
                     </button>
+                </div>
+
+                <div id="swapAlert" class="hidden bg-yellow-50 border border-yellow-200 rounded-[2rem] p-6 animate-fade">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-yellow-400 text-white rounded-full flex items-center justify-center font-black">!</div>
+                        <div class="flex-1">
+                            <h4 class="text-xs font-black text-yellow-800 uppercase tracking-widest">Mode Tukar Aktif</h4>
+                            <p class="text-[11px] font-medium text-yellow-700 mt-1">Siswa <span id="swapName" class="font-black"></span> sedang dipilih. Klik "Ke Sini" pada siswa lain untuk menukar posisi.</p>
+                        </div>
+                        <button onclick="cancelSwap()" class="text-xs font-black bg-white text-yellow-800 px-4 py-2 rounded-xl shadow-sm hover:bg-yellow-100">Batal</button>
+                    </div>
                 </div>
 
                 <div id="output" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
@@ -151,13 +169,28 @@
 
     <footer class="fixed bottom-0 w-full glass border-t-4 border-blue-700 p-4 z-[100]">
         <marquee class="text-[10px] font-black uppercase italic tracking-[0.2em] text-blue-900">
-            Smart Class Pro V1.5 — SDN Situgede 5 Kota Bogor — Dikembangkan oleh Cecep Solehudin
+            Smart Class Pro V1.6 — SDN Situgede 5 Kota Bogor — Dikembangkan oleh Cecep Solehudin
         </marquee>
     </footer>
 
     <script>
         const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let master = [], results = [];
+        
+        // Database Guru untuk Autofill
+        const dataGuru = [
+            { nama: "SRI MULYANAH, S.Pd", nip: "197008222007012009" },
+            { nama: "RIYATI, S.Pd", nip: "198801112011012001" },
+            { nama: "LIES JUITA AMBARSARI, S.Pd", nip: "198112302014092001" },
+            { nama: "SELVY PRIMADONA, S.Pd", nip: "198601212021212003" },
+            { nama: "DINI MARENA, S.Pd", nip: "198803302022212005" },
+            { nama: "MURNIYATI, SE, S.Pd", nip: "198211012024212009" },
+            { nama: "ERNA MARDIYANAH, S.Pd", nip: "197903212025212016" },
+            { nama: "NENG IRAWATI RAMADINA, S.Pd", nip: "200001112025212031" },
+            { nama: "DEDE MAYASARI, S.Pd", nip: "199401112025212129" }
+        ];
+
+        let swapState = { isActive: false, sourceC: null, sourceS: null, name: "" };
 
         function initUI() {
             const n = parseInt(document.getElementById('num').value) || 1;
@@ -165,13 +198,18 @@
             const rArea = document.getElementById('requestArea');
             wArea.innerHTML = ''; rArea.innerHTML = '';
             
+            let datalistHTML = `<datalist id="listGuru">`;
+            dataGuru.forEach(guru => { datalistHTML += `<option value="${guru.nama}">`; });
+            datalistHTML += `</datalist>`;
+            wArea.innerHTML += datalistHTML;
+
             for(let i=0; i<n; i++) {
                 wArea.innerHTML += `
                 <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-50 animate-fade">
                     <label class="text-[9px] font-black text-blue-400 uppercase italic mb-1 block">Wali Kelas ${ALPHABET[i]}</label>
-                    <input type="text" id="w_${i}" placeholder="Nama & Gelar" class="w-full bg-transparent border-b font-bold text-xs py-1 outline-none mb-2 focus:border-blue-500">
+                    <input type="text" id="w_${i}" list="listGuru" oninput="autofillNIP(this.value, ${i})" placeholder="Pilih/Ketik Nama Guru" class="w-full bg-transparent border-b font-bold text-xs py-1 outline-none mb-2 focus:border-blue-500">
                     <label class="text-[8px] font-black text-slate-300 uppercase block italic">NIP Wali Kelas</label>
-                    <input type="text" id="wnip_${i}" placeholder="Input NIP" class="w-full bg-transparent border-b border-dashed text-[10px] py-1 outline-none">
+                    <input type="text" id="wnip_${i}" placeholder="Otomatis Terisi..." class="w-full bg-transparent border-b border-dashed text-[10px] py-1 outline-none text-blue-600 font-bold">
                 </div>`;
                 
                 rArea.innerHTML += `
@@ -181,6 +219,13 @@
                 </div>`;
             }
             document.getElementById('currentDate').innerText = formatTgl(new Date());
+        }
+
+        function autofillNIP(namaDipilih, index) {
+            const guruDitemukan = dataGuru.find(g => g.nama === namaDipilih);
+            const inputNip = document.getElementById(`wnip_${index}`);
+            if (guruDitemukan) { inputNip.value = guruDitemukan.nip; } 
+            else { if(inputNip.value === "") return; }
         }
 
         function formatTgl(d) {
@@ -214,19 +259,35 @@
             const n = parseInt(document.getElementById('num').value);
             results = Array.from({length:n}, () => []);
             
-            // Logika Deteksi Kolom Cerdas
             let students = master.map(r => {
                 let kNama = Object.keys(r).find(k => k.toUpperCase().includes("NAMA") || k.toUpperCase().includes("SISWA"));
                 let kJK = Object.keys(r).find(k => k.toUpperCase().includes("JK") || k.toUpperCase().includes("SEX") || k.toUpperCase().includes("L/P"));
+                let kRank = Object.keys(r).find(k => k.toUpperCase().includes("RANKING") || k.toUpperCase().includes("PERINGKAT") || k.toUpperCase().includes("NILAI"));
+                
+                let finalJK = "-";
+                if(kJK && r[kJK]) {
+                    let textJK = String(r[kJK]).trim().toUpperCase();
+                    if(textJK.startsWith("L")) finalJK = "L";
+                    else if(textJK.startsWith("P")) finalJK = "P";
+                }
+
                 return {
                     NAMA: kNama ? String(r[kNama]).trim().toUpperCase() : "",
-                    JK: kJK ? String(r[kJK]).charAt(0).toUpperCase() : "-"
+                    JK: finalJK,
+                    RANKING: kRank ? parseInt(r[kRank]) : 999
                 };
             }).filter(s => s.NAMA !== "" && s.NAMA !== "UNDEFINED");
 
             if (students.length === 0) return alert("Gagal membaca data. Pastikan ada kolom 'Nama Lengkap'.");
 
             let used = new Set();
+
+            let sortedByRank = [...students].sort((a, b) => a.RANKING - b.RANKING);
+            let top10 = sortedByRank.filter(s => s.RANKING <= 10);
+            top10.forEach((s, idx) => {
+                if(!used.has(s.NAMA)) { results[idx % n].push(s); used.add(s.NAMA); }
+            });
+
             for(let i=0; i<n; i++) {
                 document.getElementById(`req_${i}`).value.split('\n').forEach(name => {
                     let s = name.trim().toUpperCase();
@@ -237,35 +298,140 @@
                 });
             }
 
-            students.filter(s => !used.has(s.NAMA)).forEach((s, i) => results[i % n].push(s));
+            let sisaSiswa = students.filter(s => !used.has(s.NAMA));
+            
+            const getSortKey = (nama) => {
+                let n = nama.toUpperCase().trim();
+                n = n.replace(/^(MUHAMAD|MOHAMAD|MOHAMMAD|MOH|M\.)\s+/g, 'MUHAMMAD ');
+                return n;
+            };
 
-            const out = document.getElementById('output'); out.innerHTML = '';
-            results.forEach((cls, i) => {
+            sisaSiswa.sort((a, b) => getSortKey(a.NAMA).localeCompare(getSortKey(b.NAMA)));
+            
+            let currentClassIdx = top10.length % n; 
+            sisaSiswa.forEach((s) => {
+                results[currentClassIdx].push(s);
+                used.add(s.NAMA);
+                currentClassIdx = (currentClassIdx + 1) % n;
+            });
+
+            results.forEach(cls => {
                 cls.sort((a,b) => a.NAMA.localeCompare(b.NAMA));
-                out.innerHTML += `
+            });
+
+            cancelSwap();
+            updateTotalSiswaUI(); 
+            document.getElementById('statRombel').innerText = n;
+            document.getElementById('btnPDF').classList.remove('hidden');
+            
+            renderOutput();
+            window.scrollTo({ top: document.getElementById('output').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function updateTotalSiswaUI() {
+            let allStudents = results.flat();
+            let totalSiswaAktif = allStudents.length;
+            let totalL = allStudents.filter(s => s.JK === 'L').length;
+            let totalP = allStudents.filter(s => s.JK === 'P').length;
+            
+            document.getElementById('statSiswa').innerText = totalSiswaAktif;
+            document.getElementById('statL').innerText = totalL;
+            document.getElementById('statP').innerText = totalP;
+        }
+
+        function renderOutput() {
+            const out = document.getElementById('output'); 
+            out.innerHTML = '';
+            
+            results.forEach((cls, i) => {
+                let countL = cls.filter(s => s.JK === 'L').length;
+                let countP = cls.filter(s => s.JK === 'P').length;
+
+                let html = `
                 <div class="glass rounded-[2rem] overflow-hidden shadow-xl border-b-8 border-blue-600 animate-fade">
                     <div class="blue-gradient p-5 text-white flex justify-between items-center">
                         <span class="font-black text-xs uppercase italic">ROMBEL ${ALPHABET[i]}</span>
-                        <span class="bg-white/20 px-4 py-1 rounded-full text-[10px] font-black">${cls.length} SISWA</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-[9px] font-black shadow-inner">
+                            ${cls.length} SISWA (L:${countL} P:${countP})
+                        </span>
                     </div>
-                    <div class="p-6 text-[11px] font-bold text-slate-700 space-y-2">
-                        ${cls.map((s, j) => `<div class="flex justify-between border-b border-slate-50 py-1"><span>${j+1}. ${s.NAMA}</span><span class="text-blue-500">${s.JK}</span></div>`).join('')}
-                    </div>
-                </div>`;
-            });
+                    <div class="p-6 text-[11px] font-bold text-slate-700 space-y-2">`;
+                
+                cls.forEach((s, j) => {
+                    let isSelected = swapState.isActive && swapState.sourceC === i && swapState.sourceS === j;
+                    let bgRow = isSelected ? 'bg-yellow-50 rounded-lg p-2' : 'border-b border-slate-50 py-1 hover:bg-slate-50 transition-colors';
+                    
+                    let btnTukar = !swapState.isActive 
+                        ? `<button onclick="handleSwap(${i},${j})" class="text-[9px] bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-sm">Tukar</button>`
+                        : isSelected 
+                            ? `<span class="text-[9px] bg-yellow-400 text-white px-3 py-1 rounded-full shadow-sm">Dipilih</span>`
+                            : `<button onclick="handleSwap(${i},${j})" class="text-[9px] bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-600 hover:text-white transition-all shadow-sm">Ke Sini</button>`;
 
-            document.getElementById('statSiswa').innerText = students.length;
-            document.getElementById('statRombel').innerText = n;
-            document.getElementById('btnPDF').classList.remove('hidden');
-            window.scrollTo({ top: out.offsetTop - 100, behavior: 'smooth' });
+                    let btnHapus = !swapState.isActive 
+                        ? `<button onclick="deleteStudent(${i},${j})" class="text-[9px] bg-red-50 text-red-600 px-2 py-1 rounded-full hover:bg-red-600 hover:text-white transition-all shadow-sm ml-1" title="Hapus Siswa">✖</button>`
+                        : '';
+
+                    let rankBadge = s.RANKING <= 10 ? `<span class="bg-red-100 text-red-600 px-1 py-0.5 rounded text-[8px] ml-2 italic">Rank ${s.RANKING}</span>` : '';
+                    let jkColor = s.JK === 'L' ? 'text-blue-500' : s.JK === 'P' ? 'text-pink-500' : 'text-slate-400';
+
+                    html += `
+                        <div class="flex justify-between items-center ${bgRow}">
+                            <div class="flex items-center">
+                                <span class="w-5 text-slate-400 font-medium">${j+1}.</span> 
+                                <span class="text-slate-800">${s.NAMA}</span> ${rankBadge}
+                                <span class="${jkColor} ml-2 font-black">${s.JK}</span>
+                            </div>
+                            <div class="flex items-center">${btnTukar} ${btnHapus}</div>
+                        </div>`;
+                });
+
+                html += `</div></div>`;
+                out.innerHTML += html;
+            });
+        }
+
+        function handleSwap(cIdx, sIdx) {
+            if(!swapState.isActive) {
+                swapState.isActive = true; swapState.sourceC = cIdx; swapState.sourceS = sIdx;
+                swapState.name = results[cIdx][sIdx].NAMA;
+                document.getElementById('swapAlert').classList.remove('hidden');
+                document.getElementById('swapName').innerText = swapState.name;
+                renderOutput(); 
+            } else {
+                if(swapState.sourceC === cIdx && swapState.sourceS === sIdx) { cancelSwap(); return; }
+                let temp = results[swapState.sourceC][swapState.sourceS];
+                results[swapState.sourceC][swapState.sourceS] = results[cIdx][sIdx];
+                results[cIdx][sIdx] = temp;
+                cancelSwap();
+                updateTotalSiswaUI();
+            }
+        }
+
+        function cancelSwap() {
+            swapState.isActive = false;
+            document.getElementById('swapAlert').classList.add('hidden');
+            renderOutput();
+        }
+
+        function deleteStudent(cIdx, sIdx) {
+            cancelSwap(); 
+            const studentName = results[cIdx][sIdx].NAMA;
+            if(confirm(`Apakah Anda yakin ingin MENGHAPUS "${studentName}" dari Rombel ${ALPHABET[cIdx]}?`)) {
+                results[cIdx].splice(sIdx, 1); 
+                updateTotalSiswaUI(); 
+                renderOutput(); 
+            }
         }
 
         async function printPDF() {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', [215, 330]); // Ukuran F4
+            const doc = new jsPDF('p', 'mm', [215, 330]); 
             const tgl = formatTgl(new Date());
             const logoL = document.getElementById('prevLeft').src;
             const logoR = document.getElementById('prevRight').src;
+            
+            // Mengambil angka Kelas yang dipilih untuk nama file PDF
+            const selectedGrade = document.getElementById('grade').value;
 
             results.forEach((cls, i) => {
                 if(i > 0) doc.addPage();
@@ -275,18 +441,25 @@
 
                 doc.setFont("helvetica", "bold").setFontSize(14).text("PEMERINTAH KOTA BOGOR", 107.5, 15, {align:'center'});
                 doc.setFontSize(12).text("DINAS PENDIDIKAN - SDN SITUGEDE 5", 107.5, 21, {align:'center'});
-                doc.setFontSize(10).text(`DAFTAR SISWA KELAS ${document.getElementById('grade').value}${ALPHABET[i]} - TA 2026/2027`, 107.5, 27, {align:'center'});
+                doc.setFontSize(10).text(`DAFTAR SISWA KELAS ${selectedGrade}${ALPHABET[i]} - TA 2026/2027`, 107.5, 27, {align:'center'});
                 doc.setLineWidth(0.8).line(15, 32, 200, 32);
 
                 doc.autoTable({
                     startY: 38, 
-                    head: [['NO', 'NAMA LENGKAP SISWA', 'JK']],
-                    body: cls.map((s, idx) => [idx+1, s.NAMA, s.JK]),
+                    head: [['NO', 'NAMA LENGKAP SISWA', 'JK', 'KET']],
+                    body: cls.map((s, idx) => [idx+1, s.NAMA, s.JK, s.RANKING <= 10 ? `Rank ${s.RANKING}` : '-']),
                     headStyles: { fillColor: [30, 64, 175] },
                     styles: { fontSize: 9 }
                 });
 
-                let y = doc.lastAutoTable.finalY + 15;
+                let y = doc.lastAutoTable.finalY + 8;
+                
+                let countL = cls.filter(s => s.JK === 'L').length;
+                let countP = cls.filter(s => s.JK === 'P').length;
+                doc.setFont("helvetica", "bold").setFontSize(9);
+                doc.text(`Rekapitulasi: Laki-laki = ${countL}  |  Perempuan = ${countP}  |  Total = ${cls.length} Siswa`, 15, y);
+
+                y += 12; 
                 if (y > 280) { doc.addPage(); y = 20; }
 
                 doc.setFontSize(10).text("Kepala Sekolah,", 30, y);
@@ -298,19 +471,21 @@
                 doc.text(document.getElementById(`w_${i}`).value || "________________", 140, y + 22);
                 doc.setFont("helvetica", "normal").text(`NIP. ${document.getElementById(`wnip_${i}`).value || "________________"}`, 140, y + 27);
             });
-            doc.save(`DATA_ROMBEL_SDN5_${tgl}.pdf`);
+            
+            // UPDATED: Mengubah format penamaan file saat proses penyimpanan PDF
+            doc.save(`DATA_ROMBEL_KELAS_${selectedGrade}_SDN5_${tgl}.pdf`);
         }
 
         function downloadTemplate() {
-            const header = [["Nama Lengkap", "JK", "Alamat", "Kelas Asal", "NILAI"]];
+            const header = [["Nama Lengkap", "JK", "Alamat", "Kelas Asal", "RANKING"]];
             const ws = XLSX.utils.aoa_to_sheet(header);
             ws['!cols'] = [{ wch: 35 }, { wch: 5 }, { wch: 40 }, { wch: 15 }, { wch: 10 }];
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Data");
             XLSX.writeFile(wb, "Template_Master_SDN5.xlsx");
         }
-        
-        initUI();
+
+        initUI(); 
     </script>
 </body>
 </html>
