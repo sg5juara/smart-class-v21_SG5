@@ -147,15 +147,7 @@
                     </div>
                 </div>
 
-                <div id="pdfOptions" class="hidden w-full glass p-4 rounded-2xl border-l-4 border-slate-800 flex justify-between items-center animate-fade">
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Pengaturan Cetak PDF</span>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="showRankPdf" checked class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                        <span class="text-[10px] font-bold text-slate-800 uppercase">Tampilkan Rank di Kolom KET</span>
-                    </label>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                     <button onclick="process()" class="col-span-2 md:col-span-1 py-4 blue-gradient text-white rounded-[1.5rem] font-black text-[10px] tracking-[0.2em] shadow-xl hover:scale-[1.02] transition-all uppercase">
                         🚀 Proses Rombel
                     </button>
@@ -409,7 +401,6 @@
             
             document.getElementById('btnSort').classList.remove('hidden');
             document.getElementById('btnPDF').classList.remove('hidden');
-            document.getElementById('pdfOptions').classList.remove('hidden');
             
             playSuccessSound();
             renderOutput();
@@ -572,7 +563,6 @@
             const logoL = document.getElementById('prevLeft').src;
             const logoR = document.getElementById('prevRight').src;
             const selectedGrade = document.getElementById('grade').value;
-            const isRankPrinted = document.getElementById('showRankPdf').checked;
 
             results.forEach((cls, i) => {
                 if(i > 0) doc.addPage();
@@ -596,7 +586,7 @@
                         idx+1, 
                         s.NAMA, 
                         s.JK, 
-                        (isRankPrinted && s.RANKING <= 10) ? `Rank ${s.RANKING}` : '-'
+                        '-'
                     ]),
                     headStyles: { fillColor: [30, 64, 175] },
                     styles: { fontSize: 9 }
@@ -610,16 +600,25 @@
                 doc.text(`Rekapitulasi: Laki-laki = ${countL}  |  Perempuan = ${countP}  |  Total = ${cls.length} Siswa`, 15, y);
 
                 y += 12; 
-                if (y > 280) { doc.addPage(); y = 20; }
+                if (y > 270) { doc.addPage(); y = 20; }
 
-                doc.setFontSize(10).text("Kepala Sekolah,", 30, y);
-                doc.text(document.getElementById('kepsek').value, 30, y + 22);
-                doc.setFont("helvetica", "normal").text(`NIP. ${document.getElementById('nip').value}`, 30, y + 27);
+                doc.setFontSize(10);
+                
+                // Tanggal cetak di atas Wali Kelas
+                doc.text(`Bogor, ${tgl}`, 140, y);
+                
+                // Tulisan Kepala Sekolah dan Wali Kelas Sejajar
+                doc.text("Kepala Sekolah,", 30, y + 6);
+                doc.text("Wali Kelas,", 140, y + 6);
 
-                doc.setFont("helvetica", "bold").text(`Bogor, ${tgl}`, 140, y);
-                doc.text("Wali Kelas,", 140, y + 5);
-                doc.text(document.getElementById(`w_${i}`).value || "________________", 140, y + 22);
-                doc.setFont("helvetica", "normal").text(`NIP. ${document.getElementById(`wnip_${i}`).value || "________________"}`, 140, y + 27);
+                // Nama Sejajar
+                doc.text(document.getElementById('kepsek').value, 30, y + 26);
+                doc.text(document.getElementById(`w_${i}`).value || "________________", 140, y + 26);
+                
+                // NIP Sejajar
+                doc.setFont("helvetica", "normal");
+                doc.text(`NIP. ${document.getElementById('nip').value}`, 30, y + 31);
+                doc.text(`NIP. ${document.getElementById(`wnip_${i}`).value || "________________"}`, 140, y + 31);
             });
             
             doc.save(`DATA_ROMBEL_KELAS_${selectedGrade}_SDN5_${tgl}.pdf`);
